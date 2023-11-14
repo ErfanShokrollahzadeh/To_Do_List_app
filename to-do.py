@@ -5,6 +5,7 @@ import pickle # to save and load tasks
 root = tkinter.Tk()
 root.title("To-Do List by python")
 
+
 # Create functions
 def add_task():
     task = entry_task.get()
