@@ -42,12 +42,19 @@ def save_edited_task():
 
 def load_task():
     try:
-        tasks = pickle.load(open("tasks.dat", "rb")) # rb = read binary
+        with open("words.txt", "r") as file:
+            tasks = file.readlines()
+
+        # Remove newline characters from each task and display in listbox
         listbox_tasks.delete(0, tkinter.END)
         for task in tasks:
+            task = task.strip()
             listbox_tasks.insert(tkinter.END, task)
-    except:
-        tkinter.messagebox.showinfo("warning", " No tasks found")
+
+    except FileNotFoundError:
+        tkinter.messagebox.showinfo("Warning", "No tasks found in the file.")
+    except Exception as e:
+        tkinter.messagebox.showinfo("Error", f"An error occurred: {str(e)}")
 
 def save_task():
     tasks = listbox_tasks.get(0, listbox_tasks.size())
