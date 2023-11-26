@@ -1,6 +1,7 @@
 import tkinter
 import tkinter.messagebox
 import pickle # to save and load tasks
+from tkinter import filedialog
 
 root = tkinter.Tk()
 root.title("To-Do List by python")
@@ -40,9 +41,32 @@ def save_edited_task():
     else:
         tkinter.messagebox.showinfo("Warning", "Please enter a valid task.")
 
+# def load_task():
+#     try:
+#         with open("test.txt", "r") as file:
+#             tasks = file.readlines()
+#
+#         # Remove newline characters from each task and display in listbox
+#         listbox_tasks.delete(0, tkinter.END)
+#         for task in tasks:
+#             task = task.strip()
+#             listbox_tasks.insert(tkinter.END, task)
+#
+#     except FileNotFoundError:
+#         tkinter.messagebox.showinfo("Warning", "No tasks found in the file.")
+#     except Exception as e:
+#         tkinter.messagebox.showinfo("Error", f"An error occurred: {str(e)}")
+
 def load_task():
     try:
-        with open("words.txt", "r") as file:
+        # Ask the user to select a file
+        file_path = filedialog.askopenfilename(title="Select a file", filetypes=[("Text files", "*.txt")])
+
+        # Check if the user canceled the file dialog
+        if not file_path:
+            return
+
+        with open(file_path, "r") as file:
             tasks = file.readlines()
 
         # Remove newline characters from each task and display in listbox
@@ -52,7 +76,7 @@ def load_task():
             listbox_tasks.insert(tkinter.END, task)
 
     except FileNotFoundError:
-        tkinter.messagebox.showinfo("Warning", "No tasks found in the file.")
+        tkinter.messagebox.showinfo("Warning", "No tasks found in the selected file.")
     except Exception as e:
         tkinter.messagebox.showinfo("Error", f"An error occurred: {str(e)}")
 
