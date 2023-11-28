@@ -1,27 +1,67 @@
 import tkinter
 import tkinter.messagebox
 import pickle # to save and load tasks
-from tkinter import filedialog
+# from tkinter import filedialog
 
 root = tkinter.Tk()
 root.title("To-Do List by python")
 
 
 # Create functions
+# def add_task():
+#     task = entry_task.get()
+#     if task != "":
+#         listbox_tasks.insert(tkinter.END, task)
+#         entry_task.delete(0, tkinter.END)
+#     else:
+#         tkinter.messagebox.showinfo("warning", " Please enter a task")
+
 def add_task():
     task = entry_task.get()
     if task != "":
+        # Add task to the listbox
         listbox_tasks.insert(tkinter.END, task)
+
+        # Add task to the file
+        with open("test.txt", "a") as file:
+            file.write(task + "\n")
+
+        # Clear the entry field
         entry_task.delete(0, tkinter.END)
     else:
-        tkinter.messagebox.showinfo("warning", " Please enter a task")
+        tkinter.messagebox.showinfo("Warning", "Please enter a task")
+
+# def delete_task():
+#     try:
+#         task_index = listbox_tasks.curselection()[0]
+#         listbox_tasks.delete(task_index)
+#     except:
+#         tkinter.messagebox.showinfo("warning", " Please select a task")
 
 def delete_task():
     try:
+        # Get the selected task index
         task_index = listbox_tasks.curselection()[0]
+
+        # Get the selected task
+        selected_task = listbox_tasks.get(task_index)
+
+        # Delete the task from the listbox
         listbox_tasks.delete(task_index)
-    except:
-        tkinter.messagebox.showinfo("warning", " Please select a task")
+
+        # Delete the task from the file
+        with open("test.txt", "r") as file:
+            lines = file.readlines()
+
+        with open("test.txt", "w") as file:
+            for line in lines:
+                if line.strip() != selected_task:
+                    file.write(line)
+
+    except IndexError:
+        tkinter.messagebox.showinfo("Warning", "Please select a task")
+    except Exception as e:
+        tkinter.messagebox.showinfo("Error", f"An error occurred: {e}")
 
 def edit_task():
     try:
@@ -41,32 +81,9 @@ def save_edited_task():
     else:
         tkinter.messagebox.showinfo("Warning", "Please enter a valid task.")
 
-# def load_task():
-#     try:
-#         with open("test.txt", "r") as file:
-#             tasks = file.readlines()
-#
-#         # Remove newline characters from each task and display in listbox
-#         listbox_tasks.delete(0, tkinter.END)
-#         for task in tasks:
-#             task = task.strip()
-#             listbox_tasks.insert(tkinter.END, task)
-#
-#     except FileNotFoundError:
-#         tkinter.messagebox.showinfo("Warning", "No tasks found in the file.")
-#     except Exception as e:
-#         tkinter.messagebox.showinfo("Error", f"An error occurred: {str(e)}")
-
 def load_task():
     try:
-        # Ask the user to select a file
-        file_path = filedialog.askopenfilename(title="Select a file", filetypes=[("Text files", "*.txt")])
-
-        # Check if the user canceled the file dialog
-        if not file_path:
-            return
-
-        with open(file_path, "r") as file:
+        with open("test.txt", "r") as file:
             tasks = file.readlines()
 
         # Remove newline characters from each task and display in listbox
@@ -76,9 +93,32 @@ def load_task():
             listbox_tasks.insert(tkinter.END, task)
 
     except FileNotFoundError:
-        tkinter.messagebox.showinfo("Warning", "No tasks found in the selected file.")
+        tkinter.messagebox.showinfo("Warning", "No tasks found in the file.")
     except Exception as e:
         tkinter.messagebox.showinfo("Error", f"An error occurred: {str(e)}")
+
+# def load_task():
+#     try:
+#         # Ask the user to select a file
+#         file_path = filedialog.askopenfilename(title="Select a file", filetypes=[("Text files", "*.txt")])
+#
+#         # Check if the user canceled the file dialog
+#         if not file_path:
+#             return
+#
+#         with open(file_path, "r") as file:
+#             tasks = file.readlines()
+#
+#         # Remove newline characters from each task and display in listbox
+#         listbox_tasks.delete(0, tkinter.END)
+#         for task in tasks:
+#             task = task.strip()
+#             listbox_tasks.insert(tkinter.END, task)
+#
+#     except FileNotFoundError:
+#         tkinter.messagebox.showinfo("Warning", "No tasks found in the selected file.")
+#     except Exception as e:
+#         tkinter.messagebox.showinfo("Error", f"An error occurred: {str(e)}")
 
 def save_task():
     tasks = listbox_tasks.get(0, listbox_tasks.size())
